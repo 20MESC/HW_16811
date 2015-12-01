@@ -21,24 +21,42 @@ for i =1:n
     m = size(polygon_struct(i).v,2);
     for j = 1:m
         % create a separate node for each vertex v in P
-        nodes(i*j).v = polygon_struct(i).v(:,j);
+        nodes(i,j).v = polygon_struct(i).v(:,j);
         % give each node default visibility to the edges it is a component
         % of (i.e. its neighbor vertices)
         if j == m % if we have the last vertex in the cycle, give it the first as a visible partner
-            nodes(i*j).visible = [nodes(i*j).visible polygon_struct(i).v(:,1)];
-            nodes(i*j).visible = [nodes(i*j).visible polygon_struct(i).v(:,j-1)];
+            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,1)];
+            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,j-1)];
         elseif j == 1 % if we have the first vertex in the cycle, give it the last as a visible partner
-            nodes(i*j).visible = [nodes(i*j).visible polygon_struct(i).v(:,j+1)];
-            nodes(i*j).visible = [nodes(i*j).visible polygon_struct(i).v(:,m)];
+            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,j+1)];
+            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,m)];
         else
-            nodes(i*j).visible = [nodes(i*j).visible polygon_struct(i).v(:,j+1)];
-            nodes(i*j).visible = [nodes(i*j).visible polygon_struct(i).v(:,j-1)];
+            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,j+1)];
+            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,j-1)];
         end
     end
-    
-    
+      
 end
 
+%%%%%% now we will do the pairwise checking
+
+% for each polygon P
+for i =1:n
+    % for each vertex v within polygon P
+    m = size(polygon_struct(i).v,2);
+    for j = 1:m
+        
+        %checkIntersection(polygon_struct(i).v(:,j), poly
+        % for each vertex
+        nNodes = size(nodes,1)*size(nodes,2);
+        for k =1:nNodes
+            if ~(isempty(nodes(k).v))
+                [polygon_struct(i).v(:,j) nodes(k).v]
+            end
+        end
+    end
+      
+end
 
 
 
