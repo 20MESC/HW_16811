@@ -40,22 +40,25 @@ count = 1;
 for i = 1:nNodes
     nVisNodes = size(nodes(i).visible,2);
     for j = 1:nVisNodes
+        exists = 0; %for each node and for each of its visible nodes, assume this pair doesnt exist in vsArc yet
         nVisArcs = size(visArcs,2);
-        for k = 1:nVisArcs
+        for k = 1:nVisArcs %run through all existing vis arcs
             % if an arc doesnt already exist between the two points being checked
             cond1 = isequal(visArcs(k).v1, nodes(i).v)
             cond2 = isequal(visArcs(k).v2, nodes(i).visible(:,j))
             cond3 = isequal(visArcs(k).v2, nodes(i).v)
             cond4 = isequal(visArcs(k).v1, nodes(i).visible(:,j))
-            if ~(cond1 && cond2) && ~(cond3 && cond4)
-                % create new arc
-                visArcs(count).v1 = nodes(i).v
-                visArcs(count).v2 = nodes(i).visible(:,j)
-                count = count + 1; % increment count for # of arcs
+            if (cond1 && cond2) || (cond3 && cond4)
+                exists = 1;
             end
-            nVisArcs = size(visArcs,2);
         end
         
+        if exists == 0
+            % create new arc
+            visArcs(count).v1 = nodes(i).v;
+            visArcs(count).v2 = nodes(i).visible(:,j);
+            count = count + 1; % increment count for # of arcs
+        end
     end
 end
 
