@@ -28,7 +28,9 @@ for i =1:n
         nodes(i,j).P = polygon_struct(i).P;
         % give each node default visibility to the edges it is a component
         % of (i.e. its neighbor vertices)
-        if j == m % if we have the last vertex in the cycle, give it the first as a visible partner
+        if m == 1 %if there is only one vertex, we are dealing with start or end point
+            % it has no neighbor vertices on its own 'polygon' so do nothing
+        elseif j == m % if we have the last vertex in the cycle, give it the first as a visible partner
             nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,1)];
             nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,j-1)];
         elseif j == 1 % if we have the first vertex in the cycle, give it the last as a visible partner
@@ -82,12 +84,11 @@ for i =1:n
                 visibilityBlocked = 0; % start with this assumption
                 nEdges = size(edges,1)*size(edges,2);
                 for h = 1:nEdges
-                    h
                     if ~(isempty(edges(h).v1))
                         % the two sets of pairs we need to check for intersection
-                        [polygon_struct(i).v(:,j), nodes(k).v, edges(h).v1, edges(h).v2]
+                        %[polygon_struct(i).v(:,j), nodes(k).v, edges(h).v1, edges(h).v2]
                         if checkIntersection(polygon_struct(i).v(:,j), nodes(k).v, edges(h).v1, edges(h).v2)
-                            visibilityBlocked = 1
+                            visibilityBlocked = 1;
                         end     
                     end
                 end
@@ -97,7 +98,7 @@ for i =1:n
                     % add current node being checked as partner to visibility for the (i,j)th node 
                     % - (corresponds to ith polgyon and jth vertex)
                     nodes(i,j).visible = [nodes(i,j).visible nodes(k).v];
-                    disp('node added')
+                    %disp('node added')
                 end
             end
         end
