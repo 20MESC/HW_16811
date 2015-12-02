@@ -47,6 +47,7 @@ end
 % create a struct which holds all edges
 edges = struct('v1',[],'v2',[]);
 
+
 for i =1:n
     % for all vertices v within polygon P
     m = size(polygon_struct(i).v,2);
@@ -58,10 +59,8 @@ for i =1:n
             edges(i,j).v1 = polygon_struct(i).v(:,j);
             edges(i,j).v2 = polygon_struct(i).v(:,j+1);
         end
-      
+    end  
 end
-
-
 
 
 %%%%%% now we will do the pairwise checking %%%%%%%%%%%
@@ -80,12 +79,25 @@ for i =1:n
                 %[polygon_struct(i).v(:,j) nodes(k).v]
                 
                 % now we must check them against ALL edges
+                visibilityBlocked = 0; % start with this assumption
                 nEdges = size(edges,1)*size(edges,2);
                 for h = 1:nEdges
+                    h
                     if ~(isempty(edges(h).v1))
-                        %checkIntersection(polygon_struct(i).v(:,j), nodes(k).v, edges(h).v1, edges(h).v2)
+                        % the two sets of pairs we need to check for intersection
                         [polygon_struct(i).v(:,j), nodes(k).v, edges(h).v1, edges(h).v2]
+                        if checkIntersection(polygon_struct(i).v(:,j), nodes(k).v, edges(h).v1, edges(h).v2)
+                            visibilityBlocked = 1
+                        end     
                     end
+                end
+                
+                % if after all edges checked for a specific vertex, visibility is still unblocked
+                if ~visibilityBlocked
+                    % add current node being checked as partner to visibility for the (i,j)th node 
+                    % - (corresponds to ith polgyon and jth vertex)
+                    nodes(i,j).visible = [nodes(i,j).visible nodes(k).v];
+                    disp('node added')
                 end
             end
         end
