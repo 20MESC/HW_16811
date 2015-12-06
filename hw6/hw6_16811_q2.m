@@ -25,15 +25,15 @@ poly_struct(2).P = 2;
 %%%%%%%%%%% Generate Graph %%%%%%%%%%%%%%
 
 % get list of nodes and which nodes are visible to each node
-[edges, nodes] = visibilityGraph(poly_struct)
+[edges, nodes] = visibilityGraph(poly_struct);
 
 % actually create visibility arcs (yes I know this should technically be
 % built into the visibility graph function)
 visArcs = struct('v1',[],'v2',[],'weight',[]);
 
 % dummy values for first iteration
-visArcs(1).v1 = [1000;1000]
-visArcs(1).v2 = [-1000;-1000]
+visArcs(1).v1 = [1000;1000];
+visArcs(1).v2 = [-1000;-1000];
 
 nNodes = size(nodes,1)*size(nodes,2);
 count = 1;
@@ -44,10 +44,10 @@ for i = 1:nNodes
         nVisArcs = size(visArcs,2);
         for k = 1:nVisArcs %run through all existing vis arcs
             % if an arc doesnt already exist between the two points being checked
-            cond1 = isequal(visArcs(k).v1, nodes(i).v)
-            cond2 = isequal(visArcs(k).v2, nodes(i).visible(:,j))
-            cond3 = isequal(visArcs(k).v2, nodes(i).v)
-            cond4 = isequal(visArcs(k).v1, nodes(i).visible(:,j))
+            cond1 = isequal(visArcs(k).v1, nodes(i).v);
+            cond2 = isequal(visArcs(k).v2, nodes(i).visible(:,j));
+            cond3 = isequal(visArcs(k).v2, nodes(i).v);
+            cond4 = isequal(visArcs(k).v1, nodes(i).visible(:,j));
             if (cond1 && cond2) || (cond3 && cond4)
                 exists = 1;
             end
@@ -57,15 +57,22 @@ for i = 1:nNodes
             % create new arc
             visArcs(count).v1 = nodes(i).v;
             visArcs(count).v2 = nodes(i).visible(:,j);
+            
+            % also generate weight for arc (euclidian length)
+            visArcs(count).weight = norm(visArcs(count).v1-visArcs(count).v2);
+            
             count = count + 1; % increment count for # of arcs
+
         end
     end
 end
 
-nVisArcs = size(visArcs,2);
-for k = 1:nVisArcs
-    [visArcs(k).v1 visArcs(k).v2]
-end
+% create adjacency matrix for mr. DIJKSTRA
+
+
+%%%%%%%%% Find Shortest Path %%%%%%%%%%%
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
