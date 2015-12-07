@@ -1,24 +1,25 @@
 %%%%%%%%% Create map %%%%%%%%%%%%
 
 poly_struct = struct('v',[],'P',[]);
-%poly_struct(1).v = [2 2 7 7; 1 7 7 1];
+
+
 poly_struct(1).v = [2 0 4 10 7; 2 6 10 7 3];
 poly_struct(1).P = 1;
 poly_struct(2).v = [7 7 9 9; -2 0 0 -2];
 poly_struct(2).P = 2;
-%poly_struct(3).v = [22 20 24 30 27; 2 6 10 7 3];
-%poly_struct(3).P = 3;
-%poly_struct(4).v = [12 10 14 20 17; 22 26 30 27 23];
-%poly_struct(4).P = 4;
-%poly_struct(5).v = [12 17 26 23;12 15 15 12];
-%poly_struct(5).P = 5;
+poly_struct(3).v = [22 20 24 30 27; 2 6 10 7 3];
+poly_struct(3).P = 3;
+poly_struct(4).v = [12 10 14 20 17; 22 26 30 27 23];
+poly_struct(4).P = 4;
+poly_struct(5).v = [12 17 26 23;12 15 15 12];
+poly_struct(5).P = 5;
 
 %start
-%poly_struct(6).v = [-3;-3];
-%poly_struct(6).P = 6;
+poly_struct(6).v = [-3;-3];
+poly_struct(6).P = 6;
 %end
-%poly_struct(7).v = [33;33];
-%poly_struct(7).P = 7;
+poly_struct(7).v = [33;33];
+poly_struct(7).P = 7;
 
 
 
@@ -86,18 +87,18 @@ W = [visArcs.weight];
 DG = sparse([visArcs.ID1],[visArcs.ID2],W,length(nodes),length(nodes));
 UG = tril(DG + DG')
 
-h = view(biograph(UG,[],'ShowArrows','off','ShowWeights','on'))
+%h = view(biograph(UG,[],'ShowArrows','off','ShowWeights','on'))
 
 
 %%%%%%%%% Find Shortest Path %%%%%%%%%%%
-[dist,path,pred] = graphshortestpath(UG,2,9,'directed',false)
+[dist,path,pred] = graphshortestpath(UG,length(nodes)-1,length(nodes),'directed',false);
 
-set(h.Nodes(path),'Color',[1 0.4 0.4])
-fowEdges = getedgesbynodeid(h,get(h.Nodes(path),'ID'));
-revEdges = getedgesbynodeid(h,get(h.Nodes(fliplr(path)),'ID'));
-edges = [fowEdges;revEdges];
-set(edges,'LineColor',[1 0 0])
-set(edges,'LineWidth',1.5)
+%set(h.Nodes(path),'Color',[1 0.4 0.4])
+%fowEdges = getedgesbynodeid(h,get(h.Nodes(path),'ID'));
+%revEdges = getedgesbynodeid(h,get(h.Nodes(fliplr(path)),'ID'));
+%edges = [fowEdges;revEdges];
+%set(edges,'LineColor',[1 0 0])
+%set(edges,'LineWidth',1.5)
 
 
 
@@ -128,6 +129,15 @@ for i = 1:size(poly_struct,2)
     % plot edges
     plot(poly_struct(i).v(1,:),poly_struct(i).v(2,:),'g-');
     plot([poly_struct(i).v(1,nV) poly_struct(i).v(1,1)],[poly_struct(i).v(2,nV) poly_struct(i).v(2,1)],'g-')
+end
+
+% Plot shortest path
+for i = 1:size(path,2)-1
+    
+
+    % plot edges
+    plot([nodes(path(i)).v(1,:) nodes(path(i+1)).v(1,:)],[nodes(path(i)).v(2,:) nodes(path(i+1)).v(2,:)],'r-');
+ 
 end
 
 
