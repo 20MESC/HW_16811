@@ -3,24 +3,43 @@
 poly_struct = struct('v',[],'P',[]);
 
 
+%robot
+robot = [0 0 2; 0 2 0];
+
+robot_flip = -1.*robot;
+
 %start
-poly_struct(1).v = [-3;-3];
-poly_struct(1).P = 1;
+poly_struct_preMK(1).v = [-3;-3];
+poly_struct_preMK(1).P = 1;
 %end
-poly_struct(2).v = [33;33];
-poly_struct(2).P = 2;
+poly_struct_preMK(2).v = [33;33];
+poly_struct_preMK(2).P = 2;
 
-poly_struct(3).v = [2 0 4 10 7; 2 6 10 7 3];
-poly_struct(3).P = 3;
-poly_struct(4).v = [7 7 9 9; -2 0 0 -2];
-poly_struct(4).P = 4;
-%poly_struct(5).v = [22 20 24 30 27; 2 6 10 7 3];
-%poly_struct(5).P = 5;
-%poly_struct(6).v = [12 10 14 20 17; 22 26 30 27 23];
-%poly_struct(6).P = 6;
-%poly_struct(7).v = [12 17 26 23;12 15 15 12];
-%poly_struct(7).P = 7;
+poly_struct_preMK(3).v = [2 0 4 10 7; 2 6 10 7 3];
+poly_struct_preMK(3).P = 3;
+poly_struct_preMK(4).v = [7 7 9 9; -2 0 0 -2];
+poly_struct_preMK(4).P = 4;
+%poly_struct_preMK(5).v = [22 20 24 30 27; 2 6 10 7 3];
+%poly_struct_preMK(5).P = 5;
+%poly_struct_preMK(6).v = [12 10 14 20 17; 22 26 30 27 23];
+%poly_struct_preMK(6).P = 6;
+%poly_struct_preMK(7).v = [12 17 26 23;12 15 15 12];
+%poly_struct_preMK(7).P = 7;
 
+
+
+
+%%%%%%%% Compute Minkowski Sums %%%%%%%%%
+%copy start and end
+poly_struct(1).v = poly_struct_preMK(1).v;
+poly_struct(1).P = poly_struct_preMK(1).P;
+poly_struct(2).v = poly_struct_preMK(2).v;
+poly_struct(2).P = poly_struct_preMK(2).P;
+
+for i = 3:size(poly_struct_preMK,2)
+    poly_struct(i).v = minkowskiSum(poly_struct_preMK(i).v,robot_flip);
+    poly_struct(i).P = poly_struct_preMK(i).P;
+end
 
 
 %%%%%%%%%%% Generate Graph %%%%%%%%%%%%%%
@@ -107,10 +126,28 @@ UG = tril(DG + DG')
 
 %%%%%%%%%%%%% Plotting %%%%%%%%%%%%%%%%%%
 
-% Plot all polygon vertices
-plot(poly_struct(1).v(1,:),poly_struct(1).v(2,:),'ro')
+% Plot starter
+plot(poly_struct_preMK(1).v(1,:),poly_struct_preMK(1).v(2,:),'ro')
 axis([-5 35 -5 35])
 hold on;
+
+% Plot all post-Minkowski Sum polygons
+for i = 3:size(poly_struct,2)
+    % Fill polygons
+    fill(poly_struct(i).v(1,:),poly_struct(i).v(2,:),'b')
+    % plot vertices for all polygons
+    plot(poly_struct(i).v(1,:),poly_struct(i).v(2,:),'ro')
+end
+
+% Plot all pre-Minkowski Sum polygons and vertices
+for i = 1:size(poly_struct_preMK,2)
+    % Fill polygons
+    fill(poly_struct_preMK(i).v(1,:),poly_struct_preMK(i).v(2,:),'g')
+    % plot vertices for all polygons
+    plot(poly_struct_preMK(i).v(1,:),poly_struct_preMK(i).v(2,:),'ro')
+end
+
+
 
 
 % Plot all visibility graph arcs
@@ -118,19 +155,11 @@ nNodes = size(nodes,1)*size(nodes,2);
 for i = 1:nNodes
     for j = 1:size(nodes(i).visible,2)
         % plot edges
-        plot([nodes(i).v(1,1) nodes(i).visible(1,j)], [nodes(i).v(2,1) nodes(i).visible(2,j)],'b-');
+        plot([nodes(i).v(1,1) nodes(i).visible(1,j)], [nodes(i).v(2,1) nodes(i).visible(2,j)],'cyan-');
     end
 end
 
-% Plot all polygon edges
-for i = 1:size(poly_struct,2)
-    % plot vertices
-    plot(poly_struct(i).v(1,:),poly_struct(i).v(2,:),'ro')
-    nV = size(poly_struct(i).v,2);
-    % plot edges
-    plot(poly_struct(i).v(1,:),poly_struct(i).v(2,:),'g-');
-    plot([poly_struct(i).v(1,nV) poly_struct(i).v(1,1)],[poly_struct(i).v(2,nV) poly_struct(i).v(2,1)],'g-')
-end
+
 
 % Plot shortest path
 for i = 1:size(path,2)-1
