@@ -21,8 +21,8 @@ poly_struct_preMK(3).v = [2 0 4 10 7; 2 6 10 7 3];
 poly_struct_preMK(3).P = 3;
 poly_struct_preMK(4).v = [7 7 9 9; -2 0 0 -2];
 poly_struct_preMK(4).P = 4;
-poly_struct_preMK(5).v = [22 20 24 30 27; 0 4 8 5 1];
-poly_struct_preMK(5).P = 5;
+% poly_struct_preMK(5).v = [22 20 24 30 27; 0 4 8 5 1];
+% poly_struct_preMK(5).P = 5;
 % poly_struct_preMK(6).v = [12 10 14 20 17; 18 24 30 23 18];
 % poly_struct_preMK(6).P = 6;
 % poly_struct_preMK(7).v = [12 17 26 23;12 15 15 12];
@@ -143,13 +143,13 @@ for i = 3:size(poly_struct,2)
     plot(poly_struct(i).v(1,:),poly_struct(i).v(2,:),'ro')
 end
 
-% Plot all pre-Minkowski Sum polygons and vertices
-% for i = 1:size(poly_struct_preMK,2)
-%     % Fill polygons
-%     fill(poly_struct_preMK(i).v(1,:),poly_struct_preMK(i).v(2,:),'g')
-%     % plot vertices for all polygons
-%     plot(poly_struct_preMK(i).v(1,:),poly_struct_preMK(i).v(2,:),'ro')
-% end
+%Plot all pre-Minkowski Sum polygons and vertices
+for i = 1:size(poly_struct_preMK,2)
+    % Fill polygons
+    fill(poly_struct_preMK(i).v(1,:),poly_struct_preMK(i).v(2,:),'g')
+    % plot vertices for all polygons
+    plot(poly_struct_preMK(i).v(1,:),poly_struct_preMK(i).v(2,:),'ro')
+end
 
 
 

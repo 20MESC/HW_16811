@@ -90,10 +90,10 @@ for i =1:n
                     if ~(isempty(edges(h).v1))
                         % the two sets of pairs we need to check for intersection
                         %[polygon_struct(i).v(:,j), nodes(k).v, edges(h).v1, edges(h).v2]
-                        prtb = 10e-5; % to solve the issue of running directly through a vertex (btwn two edges)
+                        prtb = 0 %10e-5; % to solve the issue of running directly through a vertex (btwn two edges)
                         cond1 = checkIntersection(polygon_struct(i).v(:,j)+prtb, nodes(k).v+prtb, edges(h).v1, edges(h).v2);
-                        cond2 = checkIntersection(polygon_struct(i).v(:,j)-prtb, nodes(k).v-prtb, edges(h).v1, edges(h).v2);
-                        if cond1 || cond2
+                        %cond2 = checkIntersection(polygon_struct(i).v(:,j)-prtb, nodes(k).v-prtb, edges(h).v1, edges(h).v2);
+                        if cond1 %|| cond2
                             visibilityBlocked = 1;
                         end     
                     end
