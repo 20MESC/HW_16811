@@ -21,14 +21,14 @@ poly_struct_preMK(3).v = [2 0 4 10 7; 2 6 10 7 3];
 poly_struct_preMK(3).P = 3;
 poly_struct_preMK(4).v = [7 7 9 9; -2 0 0 -2];
 poly_struct_preMK(4).P = 4;
-% poly_struct_preMK(5).v = [22 20 24 30 27; 0 4 8 5 1];
-% poly_struct_preMK(5).P = 5;
-% poly_struct_preMK(6).v = [12 10 14 20 17; 18 24 30 23 18];
-% poly_struct_preMK(6).P = 6;
-% poly_struct_preMK(7).v = [12 17 26 23;12 15 15 12];
-% poly_struct_preMK(7).P = 7;
-% poly_struct_preMK(8).v = [25 23 29 34;20 28 29 21];
-% poly_struct_preMK(8).P = 8;
+poly_struct_preMK(5).v = [22 20 24 30 27; 0 4 8 5 1];
+poly_struct_preMK(5).P = 5;
+poly_struct_preMK(6).v = [12 10 14 20 17; 18 24 30 23 18];
+poly_struct_preMK(6).P = 6;
+poly_struct_preMK(7).v = [12 17 26 23;12 15 15 12];
+poly_struct_preMK(7).P = 7;
+poly_struct_preMK(8).v = [25 23 29 34;20 28 29 21];
+poly_struct_preMK(8).P = 8;
 
 
 
