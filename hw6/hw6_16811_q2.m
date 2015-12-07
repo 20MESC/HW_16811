@@ -3,23 +3,23 @@
 poly_struct = struct('v',[],'P',[]);
 
 
-poly_struct(1).v = [2 0 4 10 7; 2 6 10 7 3];
-poly_struct(1).P = 1;
-poly_struct(2).v = [7 7 9 9; -2 0 0 -2];
-poly_struct(2).P = 2;
-poly_struct(3).v = [22 20 24 30 27; 2 6 10 7 3];
-poly_struct(3).P = 3;
-poly_struct(4).v = [12 10 14 20 17; 22 26 30 27 23];
-poly_struct(4).P = 4;
-poly_struct(5).v = [12 17 26 23;12 15 15 12];
-poly_struct(5).P = 5;
-
 %start
-poly_struct(6).v = [-3;-3];
-poly_struct(6).P = 6;
+poly_struct(1).v = [-3;-3];
+poly_struct(1).P = 1;
 %end
-poly_struct(7).v = [33;33];
-poly_struct(7).P = 7;
+poly_struct(2).v = [33;33];
+poly_struct(2).P = 2;
+
+poly_struct(3).v = [2 0 4 10 7; 2 6 10 7 3];
+poly_struct(3).P = 3;
+poly_struct(4).v = [7 7 9 9; -2 0 0 -2];
+poly_struct(4).P = 4;
+%poly_struct(5).v = [22 20 24 30 27; 2 6 10 7 3];
+%poly_struct(5).P = 5;
+%poly_struct(6).v = [12 10 14 20 17; 22 26 30 27 23];
+%poly_struct(6).P = 6;
+%poly_struct(7).v = [12 17 26 23;12 15 15 12];
+%poly_struct(7).P = 7;
 
 
 
@@ -91,7 +91,8 @@ UG = tril(DG + DG')
 
 
 %%%%%%%%% Find Shortest Path %%%%%%%%%%%
-[dist,path,pred] = graphshortestpath(UG,length(nodes)-1,length(nodes),'directed',false);
+% ID 1 is start, ID2 is end
+[dist,path,pred] = graphshortestpath(UG,1,2,'directed',false);
 
 %set(h.Nodes(path),'Color',[1 0.4 0.4])
 %fowEdges = getedgesbynodeid(h,get(h.Nodes(path),'ID'));
