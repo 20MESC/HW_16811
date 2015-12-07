@@ -6,7 +6,7 @@ poly_struct = struct('v',[],'P',[]);
 
 
 %robot
-robot = [0 1 2; 0 1 0];
+robot = [0 0 2 2; 0 2 2 0];
 
 robot_flip = -1.*robot;
 
