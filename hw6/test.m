@@ -1,22 +1,19 @@
-x=[1 3 5; 2 4 6];
-y = [2 1 6];
-a = [3 4 5];
 
-n_labels = length(x);
+%// Your example
+X = {-2, 3', 3};
+Y = {2, 4, -1};
+Z = [1 2 3];
 
-total = 0
+%// Call unique and get the unique entries
+chars = unique([X Y], 'stable')
 
-for i = 1:n_labels
-    for j = 1:n_labels
-        total = total + y(i)*y(j)*a(i)*a(j)*(x(:,i)'*x(:,j));
-    end
-end
+%// Create containers.Map
+map = containers.Map(chars, 1:numel(chars));
 
-total
+%// Find the IDs for each of X and Y
+idX = cell2mat(values(map, X)).';
+idY = cell2mat(values(map, Y)).';
 
+%// Create sparse matrix
+A = sparse([idX; idY], [idY; idX], [Z; Z]);
 
-
-
-total = 0
-
-total = cumsum((a.*y*x').cumsum((a.*y)*x))

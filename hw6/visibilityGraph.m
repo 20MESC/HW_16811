@@ -11,35 +11,36 @@ function [edges,nodes] = visibilityGraph(polygon_struct)
 % establish structure of nodes which can hold value 'v' indicating the vertex
 % and a list value 'visible' which will hold list of references to other nodes
 % that are visible to v
-nodes = struct('v',[],'visible',[]);
+nodes = struct('v',[],'visible',[],'P',[]);
 
 
 %%%%%%%%%Create Nodes List%%%%%%%%%%%
-
 n=size(polygon_struct,2);
 % for all polygons P in set S
+count = 1; % count for adding a new node
 for i =1:n
     % for all vertices v within polygon P
     m = size(polygon_struct(i).v,2);
     for j = 1:m
         % create a separate node for each vertex v in P
-        nodes(i,j).v = polygon_struct(i).v(:,j);
+        nodes(count).v = polygon_struct(i).v(:,j);
         % nodes remember which polygon they were from
-        nodes(i,j).P = polygon_struct(i).P;
+        nodes(count).P = polygon_struct(i).P;
         % give each node default visibility to the edges it is a component
         % of (i.e. its neighbor vertices)
         if m == 1 %if there is only one vertex, we are dealing with start or end point
             % it has no neighbor vertices on its own 'polygon' so do nothing
         elseif j == m % if we have the last vertex in the cycle, give it the first as a visible partner
-            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,1)];
-            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,j-1)];
+            nodes(count).visible = [nodes(count).visible polygon_struct(i).v(:,1)];
+            nodes(count).visible = [nodes(count).visible polygon_struct(i).v(:,j-1)];
         elseif j == 1 % if we have the first vertex in the cycle, give it the last as a visible partner
-            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,j+1)];
-            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,m)];
+            nodes(count).visible = [nodes(count).visible polygon_struct(i).v(:,j+1)];
+            nodes(count).visible = [nodes(count).visible polygon_struct(i).v(:,m)];
         else
-            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,j+1)];
-            nodes(i,j).visible = [nodes(i,j).visible polygon_struct(i).v(:,j-1)];
+            nodes(count).visible = [nodes(count).visible polygon_struct(i).v(:,j+1)];
+            nodes(count).visible = [nodes(count).visible polygon_struct(i).v(:,j-1)];
         end
+        count = count + 1;
     end
       
 end
@@ -49,25 +50,27 @@ end
 % create a struct which holds all edges
 edges = struct('v1',[],'v2',[]);
 
-
+count = 1;
 for i =1:n
     % for all vertices v within polygon P
     m = size(polygon_struct(i).v,2);
     for j = 1:m
         if j == m % if we have the last vertex in the cycle, give it the first as a visible partner
-            edges(i,j).v1 = polygon_struct(i).v(:,j);
-            edges(i,j).v2 = polygon_struct(i).v(:,1);
+            edges(count).v1 = polygon_struct(i).v(:,j);
+            edges(count).v2 = polygon_struct(i).v(:,1);
         else
-            edges(i,j).v1 = polygon_struct(i).v(:,j);
-            edges(i,j).v2 = polygon_struct(i).v(:,j+1);
+            edges(count).v1 = polygon_struct(i).v(:,j);
+            edges(count).v2 = polygon_struct(i).v(:,j+1);
         end
-    end  
+        count = count +1;
+    end
 end
 
 
 %%%%%% now we will do the pairwise checking %%%%%%%%%%%
 
 % for each polygon P
+count = 1;
 for i =1:n
     % for each vertex v within polygon P
     m = size(polygon_struct(i).v,2);
@@ -97,11 +100,12 @@ for i =1:n
                 if ~visibilityBlocked
                     % add current node being checked as partner to visibility for the (i,j)th node 
                     % - (corresponds to ith polgyon and jth vertex)
-                    nodes(i,j).visible = [nodes(i,j).visible nodes(k).v];
+                    nodes(count).visible = [nodes(count).visible nodes(k).v];
                     %disp('node added')
                 end
             end
         end
+        count = count +1;
     end
       
 end

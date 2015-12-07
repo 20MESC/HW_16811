@@ -29,7 +29,7 @@ poly_struct(2).P = 2;
 
 % actually create visibility arcs (yes I know this should technically be
 % built into the visibility graph function)
-visArcs = struct('v1',[],'v2',[],'weight',[]);
+visArcs = struct('v1',[],'v2',[],'ID1',[],'ID2',[],'weight',[]);
 
 % dummy values for first iteration
 visArcs(1).v1 = [1000;1000];
@@ -56,7 +56,21 @@ for i = 1:nNodes
         if exists == 0
             % create new arc
             visArcs(count).v1 = nodes(i).v;
+            visArcs(count).ID1 = i
             visArcs(count).v2 = nodes(i).visible(:,j);
+            idx = [nodes.v] ==  repmat(nodes(i).visible(:,j),[1,length(nodes)]); % eww
+            
+            % looking through matches from idx to see where there is a
+            % [1;1] .... i know its terrible
+            match = NaN; % intialize. should never get an ID2 with NaN
+            for k = 1: size(idx,2)
+                if idx(1,k) == 1 && idx(2,k) == 1
+                    match = k;
+                end
+            end
+            
+            visArcs(count).ID2 = match
+            % sorry to anyone reading this code, trying to understand it
             
             % also generate weight for arc (euclidian length)
             visArcs(count).weight = norm(visArcs(count).v1-visArcs(count).v2);
@@ -67,11 +81,23 @@ for i = 1:nNodes
     end
 end
 
-% create adjacency matrix for mr. DIJKSTRA
+% create adjacency matrix form for input to dijkstras
+W = [visArcs.weight];
+DG = sparse([visArcs.ID1],[visArcs.ID2],W,length(nodes),length(nodes));
+UG = tril(DG + DG')
+
+h = view(biograph(UG,[],'ShowArrows','off','ShowWeights','on'))
 
 
 %%%%%%%%% Find Shortest Path %%%%%%%%%%%
+[dist,path,pred] = graphshortestpath(UG,2,9,'directed',false)
 
+set(h.Nodes(path),'Color',[1 0.4 0.4])
+fowEdges = getedgesbynodeid(h,get(h.Nodes(path),'ID'));
+revEdges = getedgesbynodeid(h,get(h.Nodes(fliplr(path)),'ID'));
+edges = [fowEdges;revEdges];
+set(edges,'LineColor',[1 0 0])
+set(edges,'LineWidth',1.5)
 
 
 
@@ -103,5 +129,6 @@ for i = 1:size(poly_struct,2)
     plot(poly_struct(i).v(1,:),poly_struct(i).v(2,:),'g-');
     plot([poly_struct(i).v(1,nV) poly_struct(i).v(1,1)],[poly_struct(i).v(2,nV) poly_struct(i).v(2,1)],'g-')
 end
+
 
 
